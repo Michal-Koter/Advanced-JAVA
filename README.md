@@ -7,3 +7,4 @@
 3. Lambda Expressions 
 4. Stream
 5. Reflection
+6. Annotations
