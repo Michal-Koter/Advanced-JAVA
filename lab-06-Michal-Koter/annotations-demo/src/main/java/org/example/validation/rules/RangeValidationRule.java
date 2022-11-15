@@ -19,12 +19,15 @@ public class RangeValidationRule implements ICheckValidationRule{
                 try {
                     if (field.getInt(result.getValidatedObject()) < range.min() || field.getInt(result.getValidatedObject()) > range.max()){
                         result.setValid(false);
-                        result.getNotValidFields().get(field.getName()).add(range.message());
+                        if(result.getNotValidFields().containsKey(field.getName())) {
+                            result.getNotValidFields().get(field.getName()).add(range.message().formatted(range.min(),range.max()));
+                        } else {
+                            result.getNotValidFields()
+                                    .put(field.getName(), Collections.singletonList(range.message().formatted(range.min(),range.max())));
+                        }
                     }
-                } catch (NullPointerException e) {
-                    result.getNotValidFields()
-                            .put(field.getName(), Collections.singletonList(range.message().formatted(range.min(),range.max())));
-                } catch (IllegalAccessException ignore) {
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
         }

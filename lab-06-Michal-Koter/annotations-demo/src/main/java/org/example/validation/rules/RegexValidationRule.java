@@ -22,11 +22,14 @@ public class RegexValidationRule implements ICheckValidationRule{
                     Matcher matcher = pattern.matcher((CharSequence) field.get(result.getValidatedObject()));
                     if (!matcher.find()) {
                         result.setValid(false);
-                        result.getNotValidFields().get(field.getName()).add(regex.message());
+                        if(result.getNotValidFields().containsKey(field.getName())) {
+                            result.getNotValidFields().get(field.getName()).add(regex.message());
+                        } else {
+                            result.getNotValidFields().put(field.getName(), Collections.singletonList(regex.message()));
+                        }
                     }
-                } catch (NullPointerException e) {
-                    result.getNotValidFields().put(field.getName(), Collections.singletonList(regex.message()));
-                } catch (IllegalAccessException ignore) {
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
         }

@@ -18,11 +18,14 @@ public class NotNullValidationRule implements ICheckValidationRule{
                 try {
                     if (field.get(result.getValidatedObject()) == null) {
                         result.setValid(false);
-                        result.getNotValidFields().get(field.getName()).add(notNull.message());
+                        if(result.getNotValidFields().containsKey(field.getName())) {
+                            result.getNotValidFields().get(field.getName()).add(notNull.message());
+                        } else {
+                            result.getNotValidFields().put(field.getName(), Collections.singletonList(notNull.message()));
+                        }
                     }
-                } catch (NullPointerException e) {
-                    result.getNotValidFields().put(field.getName(), Collections.singletonList(notNull.message()));
-                } catch (IllegalAccessException ignore) {
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
         }
